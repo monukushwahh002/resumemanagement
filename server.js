@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/leads", (req, res) => {
-    res.sendFile(path.join(__dirname, "views", "Leads.html"));
+    res.sendFile(path.join(__dirname, "views", "leads.html"));
 });
 
 // Define storage
