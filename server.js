@@ -7,32 +7,36 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// MongoDB URI
-const MONGO_URI = "mongodb+srv://resumemanagemnt:fairmonukumar@cluster0.2tpvq.mongodb.net/resumeDB?retryWrites=true&w=majority&appName=Cluster0";
-
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Serve static assets (like CSS/JS/images) if needed from "public"
-app.use("/static", express.static(path.join(__dirname, "public")));
+// MongoDB URI
+const MONGO_URI = "mongodb+srv://resumemanagemnt:fairmonukumar@cluster0.2tpvq.mongodb.net/resumeDB?retryWrites=true&w=majority&appName=Cluster0";
+mongoose.connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).then(() => console.log("MongoDB connected"))
+    .catch(err => console.error("MongoDB error", err));
 
-// Routes to serve HTML pages
+// Serve static HTML files
+app.use(express.static(path.join(__dirname, "views")));
+
+// Routes
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
 app.get("/leads", (req, res) => {
-    console.log("✅ /leads route hit");
-    res.sendFile(path.join(__dirname, "views", "leads.html"));
+    res.sendFile(path.join(__dirname, "views", "Leads.html"));
 });
 
-// MongoDB Connection
-mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("✅ MongoDB connected"))
-    .catch((err) => console.error("❌ MongoDB connection error:", err));
+// Define storage
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-// Resume Schema
+// Define schema and model
 const resumeSchema = new mongoose.Schema({
     name: String,
     email: String,
@@ -44,23 +48,13 @@ const resumeSchema = new mongoose.Schema({
         contentType: String,
         fileName: String
     }
-}, { timestamps: true });
-
+});
 const Resume = mongoose.model("Resume", resumeSchema);
 
-// Multer Storage (Memory)
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-
-// Upload Resume
+// Upload route
 app.post("/api/resumes", upload.single("resume"), async (req, res) => {
     try {
         const { name, email, phone, role, experience } = req.body;
-
-        if (!req.file) {
-            return res.status(400).json({ message: "Resume file is required." });
-        }
-
         const newResume = new Resume({
             name,
             email,
@@ -73,32 +67,29 @@ app.post("/api/resumes", upload.single("resume"), async (req, res) => {
                 fileName: req.file.originalname
             }
         });
-
         await newResume.save();
-        res.status(200).json({ message: "✅ Resume submitted successfully!" });
-    } catch (error) {
-        console.error("❌ Error saving resume:", error);
+        res.status(200).json({ message: "Resume submitted successfully!" });
+    } catch (err) {
+        console.error(err);
         res.status(500).json({ message: "Server error" });
     }
 });
 
-// Get all resumes (basic info)
+// Fetch resumes
 app.get("/api/resumes", async (req, res) => {
     try {
         const resumes = await Resume.find({}, "name email phone role experience _id");
-        res.status(200).json(resumes);
-    } catch (error) {
-        res.status(500).json({ message: "Error fetching resumes" });
+        res.json(resumes);
+    } catch (err) {
+        res.status(500).json({ message: "Error retrieving data" });
     }
 });
 
-// Download Resume by ID
+// Download resume
 app.get("/api/resumes/:id/download", async (req, res) => {
     try {
         const resume = await Resume.findById(req.params.id);
-        if (!resume || !resume.file) {
-            return res.status(404).send("Resume not found");
-        }
+        if (!resume || !resume.file) return res.status(404).send("Not found");
 
         res.set({
             "Content-Type": resume.file.contentType,
@@ -106,16 +97,15 @@ app.get("/api/resumes/:id/download", async (req, res) => {
         });
         res.send(resume.file.data);
     } catch (err) {
-        res.status(500).send("Error downloading resume");
+        res.status(500).send("Error downloading file");
     }
 });
 
-// Catch-all route (optional for SPA)
-app.get("*", (req, res) => {
-    res.status(404).send("Page not found");
+// Fallback: Handle unknown paths
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, "views", "404.html")); // Create 404.html if you want
 });
 
-// Start Server
 app.listen(PORT, () => {
-    console.log(`🚀 Server running at http://localhost:${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
 });
