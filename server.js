@@ -7,29 +7,31 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.static(path.join(__dirname, "views")));
-
 // MongoDB URI
 const MONGO_URI = "mongodb+srv://resumemanagemnt:fairmonukumar@cluster0.2tpvq.mongodb.net/resumeDB?retryWrites=true&w=majority&appName=Cluster0";
 
-// Middleware
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Serve HTML files
+// Serve static files from 'views' directory
+app.use(express.static(path.join(__dirname, "views")));
+
+// Serve HTML pages manually
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "views", "index.html"));
 });
+
 app.get("/leads", (req, res) => {
-    res.sendFile(path.join(__dirname, "views", "leads.html")); // Make sure the filename is lowercase or matches exactly
+    res.sendFile(path.join(__dirname, "views", "leads.html"));
 });
 
-// MongoDB Connection
+// MongoDB connection
 mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("✅ MongoDB connected"))
     .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// Resume Schema
+// Define Resume Schema
 const resumeSchema = new mongoose.Schema({
     name: String,
     email: String,
@@ -45,11 +47,11 @@ const resumeSchema = new mongoose.Schema({
 
 const Resume = mongoose.model("Resume", resumeSchema);
 
-// Multer Storage (Memory)
+// Multer for memory storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// Upload Resume
+// POST route to save resume
 app.post("/api/resumes", upload.single("resume"), async (req, res) => {
     try {
         const { name, email, phone, role, experience } = req.body;
@@ -79,7 +81,7 @@ app.post("/api/resumes", upload.single("resume"), async (req, res) => {
     }
 });
 
-// Get all resumes with full details
+// GET route to list resumes
 app.get("/api/resumes", async (req, res) => {
     try {
         const resumes = await Resume.find({}, "name email phone role experience _id");
@@ -89,7 +91,7 @@ app.get("/api/resumes", async (req, res) => {
     }
 });
 
-// Download Resume
+// Download resume by ID
 app.get("/api/resumes/:id/download", async (req, res) => {
     try {
         const resume = await Resume.findById(req.params.id);
@@ -107,7 +109,12 @@ app.get("/api/resumes/:id/download", async (req, res) => {
     }
 });
 
-// Start Server
+// Catch-all for unknown routes
+app.use((req, res) => {
+    res.status(404).send("Page not found");
+});
+
+// Start server
 app.listen(PORT, () => {
     console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
