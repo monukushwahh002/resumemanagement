@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <title>Resume Leads</title>
+    <style>
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #00ffe7;
+            text-shadow: 0 0 5px #00ffe7;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .filters input,
+        .filters select {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 14px;
+            font-size: 14px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            outline: none;
+            box-shadow: inset 0 0 5px rgba(0, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .filters input:focus,
+        .filters select:focus {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: transparent;
+        }
+
+        th,
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: left;
+            color: #f1f1f1;
+        }
+
+        th {
+            background: rgba(0, 255, 255, 0.1);
+            color: #00ffe7;
+            text-transform: uppercase;
+            font-size: 13px;
+            border-bottom: 2px solid #00ffe7;
+        }
+
+        tr:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            transition: background 0.3s;
+        }
+
+        button {
+            padding: 8px 14px;
+            font-size: 14px;
+            color: #0f0f0f;
+            background: linear-gradient(135deg, #00ffe7, #00bfff);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 12px #00ffe7;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .no-data {
+            text-align: center;
+            margin-top: 20px;
+            color: #ff9e9e;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .filters {
+                flex-direction: column;
+            }
+
+            table,
+            thead,
+            tbody,
+            th,
+            td,
+            tr {
+                display: block;
+            }
+
+            tr {
+                margin-bottom: 15px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            td {
+                padding: 10px 15px;
+                text-align: right;
+                position: relative;
+            }
+
+            td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 15px;
+                font-weight: bold;
+                text-transform: uppercase;
+                color: #00ffe7;
+            }
+
+            th {
+                display: none;
+            }
+        }
+
+
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+
+        .home-btn {
+            background: linear-gradient(135deg, #00ffe7, #00bfff);
+            color: #0f0f0f;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .home-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 12px #00ffe7;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Leads</h1>
+
+        <div class="filters">
+            <input type="text" id="phoneFilter" placeholder="Search by Phone..." />
+            <select id="roleFilter">
+                <option value="">Filter by Role</option>
+            </select>
+            <select id="expFilter">
+                <option value="">Filter by Experience</option>
+            </select>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                    <th>Experience</th>
+                    <th>Download</th>
+                </tr>
+            </thead>
+            <tbody id="resumeTableBody"></tbody>
+        </table>
+
+        <div class="no-data" id="noDataMessage" style="display:none;">No leads available</div>
+
+        <div class="pagination">
+            <button id="prevPage">Prev</button>
+            <button id="nextPage">Next</button>
+        </div>
+        <div class="top-bar">
+            <button class="home-btn" onclick="goHome()">Save More Resume</button>
+        </div>
+    </div>
+
+    <script>
+        let resumeData = [];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
+        async function fetchLeads() {
+            try {
+                const res = await fetch("http://localhost:3000/api/resumes");
+                const data = await res.json();
+                resumeData = data;
+                populateFilters(data);
+                applyFilters();
+            } catch (err) {
+                console.error("Error fetching leads:", err);
+            }
+        }
+
+        function populateFilters(data) {
+            const roleSet = new Set();
+            const expSet = new Set();
+
+            data.forEach(item => {
+                if (item.role) roleSet.add(item.role);
+                if (item.experience) expSet.add(item.experience);
+            });
+
+            const roleFilter = document.getElementById("roleFilter");
+            const expFilter = document.getElementById("expFilter");
+
+            roleSet.forEach(role => {
+                const option = document.createElement("option");
+                option.value = role;
+                option.textContent = role;
+                roleFilter.appendChild(option);
+            });
+
+            expSet.forEach(exp => {
+                const option = document.createElement("option");
+                option.value = exp;
+                option.textContent = exp;
+                expFilter.appendChild(option);
+            });
+        }
+
+        function applyFilters() {
+            const phoneVal = document.getElementById("phoneFilter").value.toLowerCase();
+            const roleVal = document.getElementById("roleFilter").value;
+            const expVal = document.getElementById("expFilter").value;
+
+            let filtered = resumeData.filter(item => {
+                const phoneMatch = item.phone.toLowerCase().includes(phoneVal);
+                const roleMatch = roleVal ? item.role === roleVal : true;
+                const expMatch = expVal ? item.experience === expVal : true;
+                return phoneMatch && roleMatch && expMatch;
+            });
+
+            renderTable(filtered);
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById("resumeTableBody");
+            const noData = document.getElementById("noDataMessage");
+            tbody.innerHTML = "";
+
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedData = data.slice(start, end);
+
+            if (paginatedData.length === 0) {
+                noData.style.display = "block";
+            } else {
+                noData.style.display = "none";
+                paginatedData.forEach((item) => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+            <td>${item.name}</td>
+            <td>${item.email}</td>
+            <td>${item.phone}</td>
+            <td>${item.role}</td>
+            <td>${item.experience}</td>
+            <td><button onclick="downloadResume('${item._id}')">Download</button></td>
+          `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            document.getElementById("prevPage").disabled = currentPage === 1;
+            document.getElementById("nextPage").disabled = end >= data.length;
+        }
+
+        function downloadResume(id) {
+            window.open(`http://localhost:3000/api/resumes/${id}/download`, "_blank");
+        }
+
+        document.getElementById("phoneFilter").addEventListener("input", () => {
+            currentPage = 1;
+            applyFilters();
+        });
+        document.getElementById("roleFilter").addEventListener("change", () => {
+            currentPage = 1;
+            applyFilters();
+        });
+        document.getElementById("expFilter").addEventListener("change", () => {
+            currentPage = 1;
+            applyFilters();
+        });
+
+        document.getElementById("prevPage").addEventListener("click", () => {
+            currentPage--;
+            applyFilters();
+        });
+
+        document.getElementById("nextPage").addEventListener("click", () => {
+            currentPage++;
+            applyFilters();
+        });
+
+        fetchLeads();
+
+
+        function goHome() {
+            window.location.href = "/"; // Change this path if your home page is at a different route
+        }
+    </script>
+</body>
+
+</html>
