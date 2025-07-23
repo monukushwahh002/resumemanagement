@@ -7,16 +7,25 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// MongoDB URI
+const MONGO_URI = "mongodb+srv://resumemanagemnt:fairmonukumar@cluster0.2tpvq.mongodb.net/resumeDB?retryWrites=true&w=majority&appName=Cluster0";
+
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Serve static files (like CSS or JS in views folder)
-app.use(express.static(path.join(__dirname, "views")));
+// Serve static assets (like CSS/JS/images) if needed from "public"
+app.use("/static", express.static(path.join(__dirname, "public")));
 
-// MongoDB URI
-const MONGO_URI = "mongodb+srv://resumemanagemnt:fairmonukumar@cluster0.2tpvq.mongodb.net/resumeDB?retryWrites=true&w=majority&appName=Cluster0";
+// Routes to serve HTML pages
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "views", "index.html"));
+});
+
+app.get("/leads", (req, res) => {
+    console.log("✅ /leads route hit");
+    res.sendFile(path.join(__dirname, "views", "leads.html"));
+});
 
 // MongoDB Connection
 mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -39,20 +48,11 @@ const resumeSchema = new mongoose.Schema({
 
 const Resume = mongoose.model("Resume", resumeSchema);
 
-// Multer Memory Storage
+// Multer Storage (Memory)
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// HTML Routes
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "views", "index.html"));
-});
-
-app.get("/leads", (req, res) => {
-    res.sendFile(path.join(__dirname, "views", "leads.html"));
-});
-
-// API Routes
+// Upload Resume
 app.post("/api/resumes", upload.single("resume"), async (req, res) => {
     try {
         const { name, email, phone, role, experience } = req.body;
@@ -82,6 +82,7 @@ app.post("/api/resumes", upload.single("resume"), async (req, res) => {
     }
 });
 
+// Get all resumes (basic info)
 app.get("/api/resumes", async (req, res) => {
     try {
         const resumes = await Resume.find({}, "name email phone role experience _id");
@@ -91,6 +92,7 @@ app.get("/api/resumes", async (req, res) => {
     }
 });
 
+// Download Resume by ID
 app.get("/api/resumes/:id/download", async (req, res) => {
     try {
         const resume = await Resume.findById(req.params.id);
@@ -108,9 +110,9 @@ app.get("/api/resumes/:id/download", async (req, res) => {
     }
 });
 
-// Optional: Catch-all route to serve index.html for unknown routes
+// Catch-all route (optional for SPA)
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "views", "index.html"));
+    res.status(404).send("Page not found");
 });
 
 // Start Server
