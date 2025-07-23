@@ -12,32 +12,20 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// MongoDB URI
+// MongoDB
 const MONGO_URI = "mongodb+srv://resumemanagemnt:fairmonukumar@cluster0.2tpvq.mongodb.net/resumeDB?retryWrites=true&w=majority&appName=Cluster0";
 mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
-}).then(() => console.log("MongoDB connected"))
-    .catch(err => console.error("MongoDB error", err));
+    useUnifiedTopology: true
+}).then(() => console.log("Mongo connected"))
+    .catch(err => console.error(err));
 
-// Serve static HTML files
-app.use(express.static(path.join(__dirname, "views")));
-
-// Routes
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "views", "index.html"));
-});
-
-app.get("/leads", (req, res) => {
-    res.sendFile(path.join(__dirname, "views", "leads.html"));
-});
-
-// Define storage
+// File uploads
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// Define schema and model
-const resumeSchema = new mongoose.Schema({
+// Schema
+const ResumeSchema = new mongoose.Schema({
     name: String,
     email: String,
     phone: String,
@@ -49,13 +37,24 @@ const resumeSchema = new mongoose.Schema({
         fileName: String
     }
 });
-const Resume = mongoose.model("Resume", resumeSchema);
+const Resume = mongoose.model("Resume", ResumeSchema);
 
-// Upload route
+// Serve static files
+app.use(express.static(path.join(__dirname, "views")));
+
+// Routes
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "views", "index.html"));
+});
+
+app.get("/leads", (req, res) => {
+    res.sendFile(path.join(__dirname, "views", "leads.html"));
+});
+
 app.post("/api/resumes", upload.single("resume"), async (req, res) => {
     try {
         const { name, email, phone, role, experience } = req.body;
-        const newResume = new Resume({
+        const resume = new Resume({
             name,
             email,
             phone,
@@ -67,25 +66,22 @@ app.post("/api/resumes", upload.single("resume"), async (req, res) => {
                 fileName: req.file.originalname
             }
         });
-        await newResume.save();
-        res.status(200).json({ message: "Resume submitted successfully!" });
+        await resume.save();
+        res.status(200).json({ message: "Resume uploaded" });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: "Upload failed" });
     }
 });
 
-// Fetch resumes
 app.get("/api/resumes", async (req, res) => {
     try {
         const resumes = await Resume.find({}, "name email phone role experience _id");
         res.json(resumes);
     } catch (err) {
-        res.status(500).json({ message: "Error retrieving data" });
+        res.status(500).json({ message: "Error fetching resumes" });
     }
 });
 
-// Download resume
 app.get("/api/resumes/:id/download", async (req, res) => {
     try {
         const resume = await Resume.findById(req.params.id);
@@ -101,9 +97,9 @@ app.get("/api/resumes/:id/download", async (req, res) => {
     }
 });
 
-// Fallback: Handle unknown paths
-app.use((req, res) => {
-    res.status(404).sendFile(path.join(__dirname, "views", "404.html")); // Create 404.html if you want
+// Fallback: Any unknown route
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "views", "404.html")); // Optional fallback page
 });
 
 app.listen(PORT, () => {
