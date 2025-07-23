@@ -142,7 +142,7 @@
     const formData = new FormData(form);
 
     try {
-      const res = await fetch("http://localhost:3000/api/resumes", {
+      const res = await fetch("/api/resumes", {
         method: "POST",
         body: formData,
       });
