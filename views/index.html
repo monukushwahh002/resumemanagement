@@ -80,7 +80,6 @@
 
     select option {
       color: #000;
-      /* Ensure dropdown list text is visible */
     }
 
     input:focus,
@@ -140,18 +139,36 @@
   <div class="container">
     <h1>Resume Submission</h1>
     <form id="resumeForm" enctype="multipart/form-data">
-      <div class="form-group"><label>Name:</label><input type="text" name="name" required /></div>
-      <div class="form-group"><label>Email:</label><input type="email" name="email" required /></div>
-      <div class="form-group"><label>Phone:</label><input type="text" name="phone" required /></div>
+      <div class="form-group">
+        <label>Name:</label>
+        <input type="text" name="name" required />
+      </div>
+
+      <div class="form-group">
+        <label>Email:</label>
+        <input type="email" name="email" required />
+      </div>
+
+      <div class="form-group">
+        <label>Phone:</label>
+        <input type="text" name="phone" required />
+      </div>
 
       <div class="form-group">
         <label>Role:</label>
         <select name="role" required>
           <option value="">-- Select Role --</option>
-          <option value="Software Engineer">Software Engineer</option>
-          <option value="Data Analyst">Data Analyst</option>
-          <option value="HR Executive">HR Executive</option>
-          <option value="Marketing Manager">Marketing Manager</option>
+          <option value="Operations (Ops)">Operations (Ops)</option>
+          <option value="Information Technology (IT)">Information Technology (IT)</option>
+          <option value="Sales (Calling / Field)">Sales (Calling / Field)</option>
+          <option value="MIS & Data Analyst">MIS & Data Analyst</option>
+          <option value="Human Resources (HR)">Human Resources (HR)</option>
+          <option value="Digital Marketing">Digital Marketing</option>
+          <option value="Operations Support">Operations Support</option>
+          <option value="Product Management">Product Management</option>
+          <option value="Training & Development">Training & Development</option>
+          <option value="Quality Assurance (QA)">Quality Assurance (QA)</option>
+
         </select>
       </div>
 
@@ -162,7 +179,8 @@
           <option value="Fresher">Fresher</option>
           <option value="0-1 Years">0-1 Years</option>
           <option value="1-3 Years">1-3 Years</option>
-          <option value="3+ Years">3+ Years</option>
+          <option value="3-8 Years">3-8Years</option>
+          <option value="8+ Years">8+ Years</option>
         </select>
       </div>
 
@@ -171,9 +189,12 @@
         <select name="source" required>
           <option value="">-- How did you hear about us? --</option>
           <option value="LinkedIn">LinkedIn</option>
-          <option value="Facebook">Facebook</option>
           <option value="Referral">Referral</option>
           <option value="Job Portal">Job Portal</option>
+          <option value="Recruitment Consultant">Recruitment Consultant</option>
+          <option value="Campus Placement">Campus Placement</option>
+          <option value="Training institute">Training institute</option>
+          <option value="Walk in">Walk in</option>
           <option value="Other">Other</option>
         </select>
       </div>
@@ -183,13 +204,11 @@
         <input type="file" name="resume" accept=".pdf,.doc,.docx,image/*" required />
         <small>You can upload a document or choose/capture a resume photo</small>
       </div>
-      <small>You can upload a document or capture a resume photo</small>
-  </div>
 
-  <button type="submit">Submit Resume</button>
-  </form>
+      <button type="submit">Submit Resume</button>
+    </form>
 
-  <button class="secondary-btn" onclick="location.href='/leads'">Check Leads</button>
+    <button class="secondary-btn" onclick="location.href='/leads'">Check Leads</button>
   </div>
 
   <script>
