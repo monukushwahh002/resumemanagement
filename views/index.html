@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Resume Submission</title>
 
   <!-- Google Font -->
@@ -78,7 +79,8 @@
     }
 
     select option {
-      color: #000; /* Ensure dropdown list text is visible */
+      color: #000;
+      /* Ensure dropdown list text is visible */
     }
 
     input:focus,
@@ -132,92 +134,90 @@
     }
   </style>
 </head>
+
 <body>
 
-<div class="container">
-  <h1>Resume Submission</h1>
-  <form id="resumeForm" enctype="multipart/form-data">
-    <div class="form-group"><label>Name:</label><input type="text" name="name" required /></div>
-    <div class="form-group"><label>Email:</label><input type="email" name="email" required /></div>
-    <div class="form-group"><label>Phone:</label><input type="text" name="phone" required /></div>
+  <div class="container">
+    <h1>Resume Submission</h1>
+    <form id="resumeForm" enctype="multipart/form-data">
+      <div class="form-group"><label>Name:</label><input type="text" name="name" required /></div>
+      <div class="form-group"><label>Email:</label><input type="email" name="email" required /></div>
+      <div class="form-group"><label>Phone:</label><input type="text" name="phone" required /></div>
 
-    <div class="form-group">
-      <label>Role:</label>
-      <select name="role" required>
-        <option value="">-- Select Role --</option>
-        <option value="Software Engineer">Software Engineer</option>
-        <option value="Data Analyst">Data Analyst</option>
-        <option value="HR Executive">HR Executive</option>
-        <option value="Marketing Manager">Marketing Manager</option>
-      </select>
-    </div>
+      <div class="form-group">
+        <label>Role:</label>
+        <select name="role" required>
+          <option value="">-- Select Role --</option>
+          <option value="Software Engineer">Software Engineer</option>
+          <option value="Data Analyst">Data Analyst</option>
+          <option value="HR Executive">HR Executive</option>
+          <option value="Marketing Manager">Marketing Manager</option>
+        </select>
+      </div>
 
-    <div class="form-group">
-      <label>Experience:</label>
-      <select name="experience" required>
-        <option value="">-- Select Experience --</option>
-        <option value="Fresher">Fresher</option>
-        <option value="0-1 Years">0-1 Years</option>
-        <option value="1-3 Years">1-3 Years</option>
-        <option value="3+ Years">3+ Years</option>
-      </select>
-    </div>
+      <div class="form-group">
+        <label>Experience:</label>
+        <select name="experience" required>
+          <option value="">-- Select Experience --</option>
+          <option value="Fresher">Fresher</option>
+          <option value="0-1 Years">0-1 Years</option>
+          <option value="1-3 Years">1-3 Years</option>
+          <option value="3+ Years">3+ Years</option>
+        </select>
+      </div>
 
-    <div class="form-group">
-      <label>Source:</label>
-      <select name="source" required>
-        <option value="">-- How did you hear about us? --</option>
-        <option value="LinkedIn">LinkedIn</option>
-        <option value="Facebook">Facebook</option>
-        <option value="Referral">Referral</option>
-        <option value="Job Portal">Job Portal</option>
-        <option value="Other">Other</option>
-      </select>
-    </div>
+      <div class="form-group">
+        <label>Source:</label>
+        <select name="source" required>
+          <option value="">-- How did you hear about us? --</option>
+          <option value="LinkedIn">LinkedIn</option>
+          <option value="Facebook">Facebook</option>
+          <option value="Referral">Referral</option>
+          <option value="Job Portal">Job Portal</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
 
-    <div class="form-group">
-      <label>Upload Resume / Image:</label>
-      <input 
-        type="file" 
-        name="resume" 
-        accept=".pdf,.doc,.docx,image/*" 
-        capture="environment" 
-        required 
-      />
+      <div class="form-group">
+        <label>Upload Resume / Image:</label>
+        <input type="file" name="resume" accept=".pdf,.doc,.docx,image/*" required />
+        <small>You can upload a document or choose/capture a resume photo</small>
+      </div>
       <small>You can upload a document or capture a resume photo</small>
-    </div>
+  </div>
 
-    <button type="submit">Submit Resume</button>
+  <button type="submit">Submit Resume</button>
   </form>
 
   <button class="secondary-btn" onclick="location.href='/leads'">Check Leads</button>
-</div>
+  </div>
 
-<script>
-  document.getElementById("resumeForm").addEventListener("submit", async function (e) {
-    e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
+  <script>
+    document.getElementById("resumeForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
 
-    try {
-      const res = await fetch("/api/resumes", {
-        method: "POST",
-        body: formData,
-      });
+      try {
+        const res = await fetch("/api/resumes", {
+          method: "POST",
+          body: formData,
+        });
 
-      const result = await res.json();
-      if (res.ok) {
-        alert("✅ Resume submitted successfully!");
-        form.reset();
-      } else {
-        alert("❌ " + result.message);
+        const result = await res.json();
+        if (res.ok) {
+          alert("✅ Resume submitted successfully!");
+          form.reset();
+        } else {
+          alert("❌ " + result.message);
+        }
+      } catch (error) {
+        console.error("Submit failed:", error);
+        alert("Something went wrong");
       }
-    } catch (error) {
-      console.error("Submit failed:", error);
-      alert("Something went wrong");
-    }
-  });
-</script>
+    });
+  </script>
 
 </body>
+
 </html>
