@@ -46,7 +46,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/leads", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "Leads.HTML"));
+  res.sendFile(path.join(__dirname, "views", "leads.html"));
 });
 
 // Resume upload setup
