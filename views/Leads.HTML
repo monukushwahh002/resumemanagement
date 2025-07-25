@@ -1,357 +1,389 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <title>Resume Leads</title>
-    <style>
-        body {
-            font-family: 'Orbitron', sans-serif;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            color: #fff;
-            margin: 0;
-            padding: 20px;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Leads</title>
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
 
-        .container {
-            max-width: 1100px;
-            margin: auto;
-            padding: 25px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.4);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+    .container, .login-container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 25px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.4);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
 
-        h1 {
-            text-align: center;
-            font-weight: 700;
-            margin-bottom: 30px;
-            color: #00ffe7;
-            text-shadow: 0 0 5px #00ffe7;
-        }
+    h1 {
+      text-align: center;
+      font-weight: 700;
+      margin-bottom: 30px;
+      color: #00ffe7;
+      text-shadow: 0 0 5px #00ffe7;
+    }
 
-        .filters {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
 
-        .filters input,
-        .filters select {
-            flex: 1;
-            min-width: 200px;
-            padding: 12px 14px;
-            font-size: 14px;
-            border: none;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            outline: none;
-            box-shadow: inset 0 0 5px rgba(0, 255, 255, 0.3);
-            transition: all 0.3s ease;
-        }
+    .filters input,
+    .filters select,
+    .login-container input {
+      flex: 1;
+      min-width: 200px;
+      padding: 12px 14px;
+      font-size: 14px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      outline: none;
+      box-shadow: inset 0 0 5px rgba(0, 255, 255, 0.3);
+      transition: all 0.3s ease;
+    }
 
-        .filters input:focus,
-        .filters select:focus {
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
-        }
+    .filters input::placeholder,
+    .filters select option,
+    .login-container input::placeholder {
+      color: #ccc;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: transparent;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+    }
 
-        th,
-        td {
-            padding: 14px 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: left;
-            color: #f1f1f1;
-        }
+    th, td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: left;
+      color: #f1f1f1;
+    }
 
-        th {
-            background: rgba(0, 255, 255, 0.1);
-            color: #00ffe7;
-            text-transform: uppercase;
-            font-size: 13px;
-            border-bottom: 2px solid #00ffe7;
-        }
+    th {
+      background: rgba(0, 255, 255, 0.1);
+      color: #00ffe7;
+      text-transform: uppercase;
+      font-size: 13px;
+      border-bottom: 2px solid #00ffe7;
+    }
 
-        tr:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-            transition: background 0.3s;
-        }
+    tr:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      transition: background 0.3s;
+    }
 
-        button {
-            padding: 8px 14px;
-            font-size: 14px;
-            color: #0f0f0f;
-            background: linear-gradient(135deg, #00ffe7, #00bfff);
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+    button {
+      padding: 8px 14px;
+      font-size: 14px;
+      color: #0f0f0f;
+      background: linear-gradient(135deg, #00ffe7, #00bfff);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 
-        button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 12px #00ffe7;
-        }
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px #00ffe7;
+    }
 
-        .pagination {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
+    .pagination {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      color: #00ffe7;
+    }
 
-        .no-data {
-            text-align: center;
-            margin-top: 20px;
-            color: #ff9e9e;
-            font-size: 16px;
-            font-weight: 600;
-        }
+    .no-data {
+      text-align: center;
+      margin-top: 20px;
+      color: #ff9e9e;
+      font-size: 16px;
+      font-weight: 600;
+    }
 
-        @media (max-width: 768px) {
-            .filters {
-                flex-direction: column;
-            }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
 
-            table,
-            thead,
-            tbody,
-            th,
-            td,
-            tr {
-                display: block;
-            }
+    .home-btn {
+      background: linear-gradient(135deg, #00ffe7, #00bfff);
+      color: #0f0f0f;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 
-            tr {
-                margin-bottom: 15px;
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 8px;
-                overflow: hidden;
-            }
+    .home-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px #00ffe7;
+    }
 
-            td {
-                padding: 10px 15px;
-                text-align: right;
-                position: relative;
-            }
+    .login-container {
+      display: none;
+      text-align: center;
+    }
 
-            td::before {
-                content: attr(data-label);
-                position: absolute;
-                left: 15px;
-                font-weight: bold;
-                text-transform: uppercase;
-                color: #00ffe7;
-            }
+    .login-container input {
+      margin: 10px 0;
+      display: block;
+      width: 60%;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-            th {
-                display: none;
-            }
-        }
+    #loginError {
+      color: red;
+      margin-top: 10px;
+      font-weight: bold;
+    }
 
+    @media (max-width: 768px) {
+      .filters {
+        flex-direction: column;
+      }
 
-        .top-bar {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 15px;
-        }
+      table,
+      thead,
+      tbody,
+      th,
+      td,
+      tr {
+        display: block;
+      }
 
-        .home-btn {
-            background: linear-gradient(135deg, #00ffe7, #00bfff);
-            color: #0f0f0f;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 18px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+      tr {
+        margin-bottom: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+      }
 
-        .home-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 12px #00ffe7;
-        }
-    </style>
+      td {
+        padding: 10px 15px;
+        text-align: right;
+        position: relative;
+      }
+
+      td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: #00ffe7;
+      }
+
+      th {
+        display: none;
+      }
+    }
+  </style>
 </head>
-
 <body>
-    <div class="container">
-        <h1>Leads</h1>
 
-        <div class="filters">
-            <input type="text" id="phoneFilter" placeholder="Search by Phone..." />
-            <select id="roleFilter">
-                <option value="">Filter by Role</option>
-            </select>
-            <select id="expFilter">
-                <option value="">Filter by Experience</option>
-            </select>
-        </div>
+  <!-- Login Section -->
+  <div class="login-container" id="loginSection">
+    <h1>Login</h1>
+    <input type="text" id="userId" placeholder="Enter ID" />
+    <input type="password" id="userPassword" placeholder="Enter Password" />
+    <button onclick="handleLogin()">Login</button>
+    <div id="loginError"></div>
+  </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Role</th>
-                    <th>Experience</th>
-                    <th>Download</th>
-                </tr>
-            </thead>
-            <tbody id="resumeTableBody"></tbody>
-        </table>
-
-        <div class="no-data" id="noDataMessage" style="display:none;">No leads available</div>
-
-        <div class="pagination">
-            <button id="prevPage">Prev</button>
-            <button id="nextPage">Next</button>
-        </div>
-        <div class="top-bar">
-            <button class="home-btn" onclick="goHome()">Save More Resume</button>
-        </div>
+  <!-- Resume Section -->
+  <div class="container" id="resumeSection" style="display: none;">
+    <h1>Resume Leads</h1>
+    <div class="filters">
+      <input type="text" id="phoneSearch" placeholder="Search by Contact Number">
+      <select id="roleFilter"></select>
+      <select id="experienceFilter"></select>
+      <select id="sourceFilter"></select>
     </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th><th>Email</th><th>Phone</th><th>Role</th><th>Experience</th><th>Source</th><th>Download</th>
+        </tr>
+      </thead>
+      <tbody id="resumeTableBody"></tbody>
+    </table>
+    <div class="pagination" id="pagination"></div>
+    <div class="no-data" id="noDataMsg" style="display: none;">No resumes found.</div>
+    <div class="top-bar">
+      <button class="home-btn" onclick="window.location.href='/'">Back to Home</button>
+      <button class="home-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
 
-    <script>
-        let resumeData = [];
-        let currentPage = 1;
-        const itemsPerPage = 10;
+  <script>
+    const VALID_ID = "admin";
+    const VALID_PASSWORD = "Fair@1234";
+    const LOGIN_KEY = "resume_logged_in";
+    const EXPIRY_KEY = "resume_login_expiry";
 
-        async function fetchLeads() {
-            try {
-                const res = await fetch("http://localhost:3000/api/resumes");
-                const data = await res.json();
-                resumeData = data;
-                populateFilters(data);
-                applyFilters();
-            } catch (err) {
-                console.error("Error fetching leads:", err);
-            }
-        }
+    function handleLogin() {
+      const id = document.getElementById("userId").value;
+      const pw = document.getElementById("userPassword").value;
+      const errorDiv = document.getElementById("loginError");
 
-        function populateFilters(data) {
-            const roleSet = new Set();
-            const expSet = new Set();
+      if (id === VALID_ID && pw === VALID_PASSWORD) {
+        localStorage.setItem(LOGIN_KEY, "true");
+        localStorage.setItem(EXPIRY_KEY, Date.now() + 30 * 60 * 1000);
+        showResumeSection();
+      } else {
+        errorDiv.textContent = "Invalid credentials!";
+      }
+    }
 
-            data.forEach(item => {
-                if (item.role) roleSet.add(item.role);
-                if (item.experience) expSet.add(item.experience);
-            });
+    function checkLogin() {
+      const loggedIn = localStorage.getItem(LOGIN_KEY);
+      const expiry = localStorage.getItem(EXPIRY_KEY);
+      if (loggedIn === "true" && expiry && Date.now() < parseInt(expiry)) {
+        showResumeSection();
+      } else {
+        document.getElementById("loginSection").style.display = "block";
+      }
+    }
 
-            const roleFilter = document.getElementById("roleFilter");
-            const expFilter = document.getElementById("expFilter");
+    function showResumeSection() {
+      document.getElementById("loginSection").style.display = "none";
+      document.getElementById("resumeSection").style.display = "block";
+    }
 
-            roleSet.forEach(role => {
-                const option = document.createElement("option");
-                option.value = role;
-                option.textContent = role;
-                roleFilter.appendChild(option);
-            });
+    function logout() {
+      localStorage.removeItem(LOGIN_KEY);
+      localStorage.removeItem(EXPIRY_KEY);
+      location.reload();
+    }
 
-            expSet.forEach(exp => {
-                const option = document.createElement("option");
-                option.value = exp;
-                option.textContent = exp;
-                expFilter.appendChild(option);
-            });
-        }
+    checkLogin();
 
-        function applyFilters() {
-            const phoneVal = document.getElementById("phoneFilter").value.toLowerCase();
-            const roleVal = document.getElementById("roleFilter").value;
-            const expVal = document.getElementById("expFilter").value;
+    let resumes = [];
+    let filtered = [];
+    let currentPage = 1;
+    const pageSize = 10;
 
-            let filtered = resumeData.filter(item => {
-                const phoneMatch = item.phone.toLowerCase().includes(phoneVal);
-                const roleMatch = roleVal ? item.role === roleVal : true;
-                const expMatch = expVal ? item.experience === expVal : true;
-                return phoneMatch && roleMatch && expMatch;
-            });
+    const roleFilter = document.getElementById("roleFilter");
+    const experienceFilter = document.getElementById("experienceFilter");
+    const sourceFilter = document.getElementById("sourceFilter");
+    const phoneSearch = document.getElementById("phoneSearch");
 
-            renderTable(filtered);
-        }
+    function createOptions(filterEl, key) {
+      const values = [...new Set(resumes.map(r => r[key]).filter(Boolean))];
+      filterEl.innerHTML = `<option value="">All ${key.charAt(0).toUpperCase() + key.slice(1)}</option>` +
+        values.map(val => `<option value="${val}">${val}</option>`).join("");
+    }
 
-        function renderTable(data) {
-            const tbody = document.getElementById("resumeTableBody");
-            const noData = document.getElementById("noDataMessage");
-            tbody.innerHTML = "";
+    function applyFilters() {
+      const role = roleFilter.value;
+      const experience = experienceFilter.value;
+      const source = sourceFilter.value;
+      const phoneQuery = phoneSearch.value.trim();
 
-            const start = (currentPage - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
-            const paginatedData = data.slice(start, end);
+      filtered = resumes.filter(r =>
+        (!role || r.role === role) &&
+        (!experience || r.experience === experience) &&
+        (!source || r.source === source) &&
+        (!phoneQuery || (r.phone && r.phone.includes(phoneQuery)))
+      );
+      currentPage = 1;
+      renderTable();
+    }
 
-            if (paginatedData.length === 0) {
-                noData.style.display = "block";
-            } else {
-                noData.style.display = "none";
-                paginatedData.forEach((item) => {
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-            <td>${item.name}</td>
-            <td>${item.email}</td>
-            <td>${item.phone}</td>
-            <td>${item.role}</td>
-            <td>${item.experience}</td>
-            <td><button onclick="downloadResume('${item._id}')">Download</button></td>
-          `;
-                    tbody.appendChild(tr);
-                });
-            }
+    function renderTable() {
+      const start = (currentPage - 1) * pageSize;
+      const paginated = filtered.slice(start, start + pageSize);
+      const tbody = document.getElementById("resumeTableBody");
+      const noDataMsg = document.getElementById("noDataMsg");
+      tbody.innerHTML = "";
 
-            document.getElementById("prevPage").disabled = currentPage === 1;
-            document.getElementById("nextPage").disabled = end >= data.length;
-        }
+      if (!paginated.length) {
+        noDataMsg.style.display = "block";
+        return;
+      } else {
+        noDataMsg.style.display = "none";
+      }
 
-        function downloadResume(id) {
-            window.open(`http://localhost:3000/api/resumes/${id}/download`, "_blank");
-        }
+      paginated.forEach(r => {
+        const row = `
+          <tr>
+            <td data-label="Name">${r.name}</td>
+            <td data-label="Email">${r.email}</td>
+            <td data-label="Phone">${r.phone}</td>
+            <td data-label="Role">${r.role}</td>
+            <td data-label="Experience">${r.experience}</td>
+            <td data-label="Source">${r.source || "N/A"}</td>
+            <td><button onclick="downloadResume('${r._id}')">Download</button></td>
+          </tr>
+        `;
+        tbody.insertAdjacentHTML("beforeend", row);
+      });
 
-        document.getElementById("phoneFilter").addEventListener("input", () => {
-            currentPage = 1;
-            applyFilters();
-        });
-        document.getElementById("roleFilter").addEventListener("change", () => {
-            currentPage = 1;
-            applyFilters();
-        });
-        document.getElementById("expFilter").addEventListener("change", () => {
-            currentPage = 1;
-            applyFilters();
-        });
+      renderPagination();
+    }
 
-        document.getElementById("prevPage").addEventListener("click", () => {
-            currentPage--;
-            applyFilters();
-        });
+    function renderPagination() {
+      const pages = Math.ceil(filtered.length / pageSize);
+      const container = document.getElementById("pagination");
+      container.innerHTML = "";
+      for (let i = 1; i <= pages; i++) {
+        const btn = `<button onclick="goToPage(${i})" ${i === currentPage ? 'style="background:#00ffe7;color:#0f0f0f"' : ''}>${i}</button>`;
+        container.insertAdjacentHTML("beforeend", btn);
+      }
+    }
 
-        document.getElementById("nextPage").addEventListener("click", () => {
-            currentPage++;
-            applyFilters();
-        });
+    function goToPage(page) {
+      currentPage = page;
+      renderTable();
+    }
 
-        fetchLeads();
+    function downloadResume(id) {
+      window.location.href = `/api/resumes/${id}/download`;
+    }
 
+    fetch("/api/resumes")
+      .then(res => res.json())
+      .then(data => {
+        resumes = data;
+        filtered = [...resumes];
+        createOptions(roleFilter, "role");
+        createOptions(experienceFilter, "experience");
+        createOptions(sourceFilter, "source");
+        renderTable();
+      });
 
-        function goHome() {
-            window.location.href = "/"; // Change this path if your home page is at a different route
-        }
-    </script>
+    roleFilter.addEventListener("change", applyFilters);
+    experienceFilter.addEventListener("change", applyFilters);
+    sourceFilter.addEventListener("change", applyFilters);
+    phoneSearch.addEventListener("input", applyFilters);
+  </script>
 </body>
-
 </html>
