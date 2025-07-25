@@ -10,16 +10,28 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// MongoDB URI
+// Serve static files from views folder
+app.use(express.static(path.join(__dirname, "views")));
+
+// MongoDB connection
 const MONGO_URI = "mongodb+srv://resumemanagemnt:fairmonukumar@cluster0.2tpvq.mongodb.net/resumeDB?retryWrites=true&w=majority&appName=Cluster0";
 
-// MongoDB Connect
 mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("✅ MongoDB connected"))
     .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// Resume Schema
+// Routes for pages
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "views", "index.html"));
+});
+
+app.get("/leads", (req, res) => {
+    res.sendFile(path.join(__dirname, "views", "leads.html"));
+});
+
+// Mongoose schema
 const resumeSchema = new mongoose.Schema({
     name: String,
     email: String,
@@ -35,22 +47,11 @@ const resumeSchema = new mongoose.Schema({
 
 const Resume = mongoose.model("Resume", resumeSchema);
 
-// Multer Storage
+// Multer
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// Serve static files
-app.use(express.static(path.join(__dirname, "views")));
-
-// Routes
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "views", "index.html"));
-});
-app.get("/leads", (req, res) => {
-    res.sendFile(path.join(__dirname, "views", "leads.html"));
-});
-
-// Upload API
+// Submit resume
 app.post("/api/resumes", upload.single("resume"), async (req, res) => {
     try {
         const { name, email, phone, role, experience } = req.body;
@@ -80,7 +81,7 @@ app.post("/api/resumes", upload.single("resume"), async (req, res) => {
     }
 });
 
-// Fetch resumes
+// Get all resumes
 app.get("/api/resumes", async (req, res) => {
     try {
         const resumes = await Resume.find({}, "name email phone role experience _id");
@@ -90,7 +91,7 @@ app.get("/api/resumes", async (req, res) => {
     }
 });
 
-// Download resume
+// Download file
 app.get("/api/resumes/:id/download", async (req, res) => {
     try {
         const resume = await Resume.findById(req.params.id);
@@ -108,19 +109,7 @@ app.get("/api/resumes/:id/download", async (req, res) => {
     }
 });
 
-// Fallback for any other routes (for direct URL access like /leads)
-app.get("*", (req, res) => {
-    const requestedPath = req.path.replace("/", "") || "index";
-    const filePath = path.join(__dirname, "views", `${requestedPath}.html`);
-
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            res.status(404).send("Page not found");
-        }
-    });
-});
-
-// Start Server
+// Start server
 app.listen(PORT, () => {
-    console.log(`🚀 Server running at http://localhost:${PORT}`);
+    console.log(`🚀 Server running on port ${PORT}`);
 });

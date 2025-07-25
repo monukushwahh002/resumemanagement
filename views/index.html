@@ -5,117 +5,132 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Resume Submission</title>
 
-  <!-- ✅ Google Font: Orbitron -->
+  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  body {
-    font-family: 'Orbitron', sans-serif;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    color: #fff;
-    padding: 20px;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .container {
-    width: 100%;
-    max-width: 450px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.4);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-
-  h1 {
-    text-align: center;
-    color: #00ffe7;
-    margin-bottom: 18px;
-    font-size: 20px;
-    text-shadow: 0 0 6px #00ffe7;
-  }
-
-  .form-group {
-    margin-bottom: 14px;
-  }
-
-  label {
-    display: block;
-    margin-bottom: 4px;
-    font-weight: 600;
-    font-size: 13px;
-    color: #00ffe7;
-  }
-
-  input[type="text"],
-  input[type="email"],
-  input[type="file"] {
-    width: 100%;
-    padding: 8px 10px;
-    font-size: 13px;
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    border-radius: 6px;
-    color: #fff;
-    outline: none;
-    box-shadow: inset 0 0 3px rgba(0, 255, 255, 0.2);
-    transition: all 0.3s ease;
-  }
-
-  input:focus {
-    background: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 5px rgba(0, 255, 255, 0.4);
-  }
-
-  button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    background: linear-gradient(135deg, #00ffe7, #00bfff);
-    color: #0f0f0f;
-    font-size: 14px;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-
-  button:hover {
-    transform: scale(1.03);
-    box-shadow: 0 0 10px #00ffe7;
-  }
-
-  .secondary-btn {
-    background: transparent;
-    color: #00ffe7;
-    border: 1px solid #00ffe7;
-    margin-top: 14px;
-  }
-
-  .secondary-btn:hover {
-    background: rgba(0, 255, 231, 0.1);
-  }
-
-  @media (max-width: 480px) {
-    .container {
-      max-width: 100%;
-      padding: 16px;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-  }
-</style>
 
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 450px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    h1 {
+      text-align: center;
+      color: #00ffe7;
+      margin-bottom: 18px;
+      font-size: 20px;
+      text-shadow: 0 0 6px #00ffe7;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 600;
+      font-size: 13px;
+      color: #00ffe7;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="file"],
+    select {
+      width: 100%;
+      padding: 8px 10px;
+      font-size: 13px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      outline: none;
+      box-shadow: inset 0 0 3px rgba(0, 255, 255, 0.2);
+      transition: all 0.3s ease;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
+
+    select option {
+      color: #000; /* Ensure dropdown list text is visible */
+    }
+
+    input:focus,
+    select:focus {
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 5px rgba(0, 255, 255, 0.4);
+    }
+
+    small {
+      font-size: 11px;
+      color: #ccc;
+      display: block;
+      margin-top: 4px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: linear-gradient(135deg, #00ffe7, #00bfff);
+      color: #0f0f0f;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 10px #00ffe7;
+    }
+
+    .secondary-btn {
+      background: transparent;
+      color: #00ffe7;
+      border: 1px solid #00ffe7;
+      margin-top: 14px;
+    }
+
+    .secondary-btn:hover {
+      background: rgba(0, 255, 231, 0.1);
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        max-width: 100%;
+        padding: 16px;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -125,14 +140,57 @@
     <div class="form-group"><label>Name:</label><input type="text" name="name" required /></div>
     <div class="form-group"><label>Email:</label><input type="email" name="email" required /></div>
     <div class="form-group"><label>Phone:</label><input type="text" name="phone" required /></div>
-    <div class="form-group"><label>Role:</label><input type="text" name="role" required /></div>
-    <div class="form-group"><label>Experience:</label><input type="text" name="experience" required /></div>
-    <div class="form-group"><label>Upload Resume:</label><input type="file" name="resume" accept=".pdf,.doc,.docx" required /></div>
+
+    <div class="form-group">
+      <label>Role:</label>
+      <select name="role" required>
+        <option value="">-- Select Role --</option>
+        <option value="Software Engineer">Software Engineer</option>
+        <option value="Data Analyst">Data Analyst</option>
+        <option value="HR Executive">HR Executive</option>
+        <option value="Marketing Manager">Marketing Manager</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Experience:</label>
+      <select name="experience" required>
+        <option value="">-- Select Experience --</option>
+        <option value="Fresher">Fresher</option>
+        <option value="0-1 Years">0-1 Years</option>
+        <option value="1-3 Years">1-3 Years</option>
+        <option value="3+ Years">3+ Years</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Source:</label>
+      <select name="source" required>
+        <option value="">-- How did you hear about us? --</option>
+        <option value="LinkedIn">LinkedIn</option>
+        <option value="Facebook">Facebook</option>
+        <option value="Referral">Referral</option>
+        <option value="Job Portal">Job Portal</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Upload Resume / Image:</label>
+      <input 
+        type="file" 
+        name="resume" 
+        accept=".pdf,.doc,.docx,image/*" 
+        capture="environment" 
+        required 
+      />
+      <small>You can upload a document or capture a resume photo</small>
+    </div>
+
     <button type="submit">Submit Resume</button>
   </form>
 
-  <!-- 🔁 Leads page redirect button -->
-  <button class="secondary-btn" onclick="location.href='/leads'"> Check Leads</button>
+  <button class="secondary-btn" onclick="location.href='/leads'">Check Leads</button>
 </div>
 
 <script>
