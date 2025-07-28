@@ -219,6 +219,13 @@
       const form = e.target;
       const formData = new FormData(form);
 
+      // Get today's date in DD/MM/YYYY format
+      const now = new Date();
+      
+
+      // Append the date to FormData
+      formData.append("submittedDate", now);
+
       try {
         const res = await fetch("/api/resumes", {
           method: "POST",
@@ -238,6 +245,7 @@
       }
     });
   </script>
+
 
 </body>
 
