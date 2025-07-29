@@ -7,284 +7,326 @@
   <title>Resume Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
+    }
+
+    body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f6f8;
-      color: #333;
-    }
-
-    header {
-      background-color: #ffffff;
-      padding: 20px 40px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      font-size: 1.5em;
-      font-weight: bold;
-      text-align: center;
-    }
-
-    .dashboard-container {
-      padding: 10px 20px;
+      background-color: #f0f4f8;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      min-height: 100vh;
     }
 
-    .filter-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 15px;
-    }
-
-    input[type="date"] {
-      appearance: none;
-      padding: 8px 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      background-color: #fff;
-      font-size: 14px;
-      color: #333;
-      font-family: inherit;
-      transition: 0.3s ease;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      cursor: pointer;
-    }
-
-    input[type="date"]:hover {
-      background-color: #f0f0f0;
-    }
-
-    input[type="date"]:focus {
-      outline: none;
-      border-color: #007bff;
-      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-    }
-
-    @media (max-width: 600px) {
-      input[type="date"] {
-        width: 100%;
-      }
-    }
-
-    .chart-card {
+    .header {
       background-color: #ffffff;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      width: 100%;
-      max-width: 350px;
-      text-align: center;
-    }
-
-    canvas {
-      max-width: 220px;
-      margin: auto;
-    }
-
-    .legend-bar {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      padding: 12px 20px;
       display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 20px;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .nav-links {
+      display: flex;
       gap: 12px;
     }
 
-    .legend-item {
-      display: flex;
-      align-items: center;
-      font-weight: 500;
-      color: #444;
+    .nav-links a {
+      text-decoration: none;
+      background: #f7f9fc;
+      color: #333;
+      padding: 10px 14px;
+      border-radius: 8px;
       font-size: 14px;
-    }
-
-    .legend-color {
-      width: 16px;
-      height: 12px;
-      margin-right: 6px;
-      border-radius: 2px;
-    }
-
-    .footer {
-      margin-top: 30px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .footer input {
-      padding: 8px;
-      width: 150px;
-      text-align: center;
-      border: none;
-      outline: none;
-      border-radius: 6px;
-      font-weight: bold;
-      background-color: #f1f1f1;
-    }
-
-    .footer button {
-      padding: 8px 16px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
       font-weight: 500;
+      transition: all 0.3s ease;
     }
 
-    @media (max-width: 600px) {
-      .dashboard-container {
-        padding: 20px;
-      }
+    .nav-links a:hover {
+      background-color: #e0e7ff;
+      color: #1a237e;
+    }
 
-      .chart-card {
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .main {
+      padding: 20px;
+      flex-grow: 1;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 30px;
+      color: #222;
+    }
+
+    .filters {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .filters input {
+      padding: 8px 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin: 0 10px;
+    }
+
+    .charts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      justify-items: center;
+    }
+
+    .chart-card {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .chart-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .chart-card h4 {
+      margin-bottom: 15px;
+      font-size: 16px;
+      color: #444;
+    }
+
+    .count-badge {
+      background-color: #1a73e8;
+      color: #fff;
+      padding: 3px 8px;
+      font-size: 12px;
+      border-radius: 12px;
+      margin-left: 6px;
+    }
+
+    canvas {
+      max-width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
         width: 100%;
-        padding: 15px;
+        background: #ffffff;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        padding: 10px 0;
       }
 
-      canvas {
-        max-width: 180px;
+      .nav-links a {
+        padding: 12px 20px;
+        width: 100%;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .hamburger {
+        display: block;
+        color: #333;
       }
     }
   </style>
 </head>
 
 <body>
-
-  <header>Resume Dashboard</header>
-
-  <div class="dashboard-container">
-    <div class="chart-card">
-      <div class="filter-row">
-        <input type="date" id="fromDate" onchange="filterAndDrawChart()" />
-        <input type="date" id="toDate" onchange="filterAndDrawChart()" />
+  <header class="header">
+    <div class="logo">Resume Management</div>
+    <nav>
+      <button class="hamburger" id="menu-toggle">☰</button>
+      <div class="nav-links" id="nav-links">
+        <a href="/dashboard">🏠 Dashboard</a>
+        <a href="/all-leads">📋 All Leads</a>
+        <a href="/Selected-leads">✅ Selected Leads</a>
+        <!-- <a href="">🔒 Closed Leads</a> -->
       </div>
+    </nav>
+  </header>
 
-      <canvas id="circularChart"></canvas>
-      <div id="customLegend" class="legend-bar"></div>
+  <main class="main">
+    <h1>Dashboard</h1>
+    <div class="filters">
+      <input type="date" id="startDate" />
+      <input type="date" id="endDate" />
+    </div>
 
-      <div class="footer">
-        <input id="totalCount" type="text" value="Total: 0" readonly />
-        <button onclick="location.href='/leads'">Check Leads</button>
+    <div class="charts">
+      <div class="chart-card">
+        <h4>Total Leads <span class="count-badge" id="roleCount">0</span></h4>
+        <canvas id="roleChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4>Leads Action <span class="count-badge" id="actionCount">0</span></h4>
+        <canvas id="actionChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4>Selected Candidate's Role <span class="count-badge" id="selectedRoleCount">0</span></h4>
+        <canvas id="selectedRoleChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4>Selected Leads by Source <span class="count-badge" id="selectedSourceCount">0</span></h4>
+        <canvas id="selectedSourceChart"></canvas>
       </div>
     </div>
-  </div>
+  </main>
 
   <script>
     let allLeads = [];
+
+    async function fetchAllLeads() {
+      try {
+        const res = await fetch('/api/resumes');
+        allLeads = await res.json();
+        setDefaultDates();
+        updateCharts();
+      } catch (err) {
+        console.error('Failed to load leads:', err);
+      }
+    }
 
     function setDefaultDates() {
       const today = new Date();
       const yyyy = today.getFullYear();
       const mm = String(today.getMonth() + 1).padStart(2, '0');
       const dd = String(today.getDate()).padStart(2, '0');
-
-      const firstDay = `${yyyy}-${mm}-01`;
-      const currentDay = `${yyyy}-${mm}-${dd}`;
-
-      document.getElementById("fromDate").value = firstDay;
-      document.getElementById("toDate").value = currentDay;
+      document.getElementById("startDate").value = `${yyyy}-${mm}-01`;
+      document.getElementById("endDate").value = `${yyyy}-${mm}-${dd}`;
     }
 
-    async function fetchAllLeads() {
-      try {
-        const response = await fetch('/api/resumes');
-        allLeads = await response.json();
-        setDefaultDates();
-        filterAndDrawChart();
-      } catch (error) {
-        console.error("Error fetching leads:", error);
-      }
-    }
+    function updateCharts() {
+      const from = new Date(document.getElementById("startDate").value);
+      from.setHours(0, 0, 0, 0);
+      const to = new Date(document.getElementById("endDate").value);
+      to.setHours(23, 59, 59, 999);
 
-    function filterAndDrawChart() {
-      const fromDate = document.getElementById("fromDate").value;
-      const toDate = document.getElementById("toDate").value;
+      const filtered = allLeads.filter(lead => {
+        const d = new Date(lead.submittedDate);
+        return d >= from && d <= to;
+      });
 
-      let filtered = allLeads;
-
-      if (fromDate && toDate) {
-        const start = new Date(fromDate);
-        start.setHours(0, 0, 0, 0);
-
-        const end = new Date(toDate);
-        end.setHours(23, 59, 59, 999);
-
-        filtered = allLeads.filter(lead => {
-          const leadDate = new Date(lead.submittedDate);
-          return leadDate >= start && leadDate <= end;
-        });
-      }
-
-      const counts = { Selected: 0, Pending: 0, Rejected: 0 };
+      const roleMap = {};
+      const actionMap = { Selected: 0, Pending: 0, Rejected: 0 };
+      const selectedRoleMap = {};
+      const selectedSourceMap = {};
 
       filtered.forEach(lead => {
-        const action = lead.action;
-        if (counts.hasOwnProperty(action)) {
-          counts[action]++;
+        const role = lead.role || 'Other';
+        const action = lead.action || 'Pending';
+
+        // Role-wise (all leads)
+        roleMap[role] = (roleMap[role] || 0) + 1;
+
+        // Action-wise
+        if (actionMap.hasOwnProperty(action)) {
+          actionMap[action]++;
+        }
+
+        // Only selected leads - by role
+        if (action === 'Selected') {
+          selectedRoleMap[role] = (selectedRoleMap[role] || 0) + 1;
+        }
+
+
+        if (action === 'Selected') {
+          const source = lead.finalstatus || 'Unknown';
+          selectedSourceMap[source] = (selectedSourceMap[source] || 0) + 1;
         }
       });
+      const roleColors = generateColors(Object.keys(roleMap).length);
+      drawChart('roleChart', roleMap, 'roleCount', roleColors);
 
-      const labels = [];
-      const data = [];
+      drawChart('actionChart', actionMap, 'actionCount', ['rgba(35, 239, 46, 0.5)', '	rgba(241, 244, 58, 0.5)', 'rgba(239, 14, 40, 0.5)']);
+      drawChart('selectedRoleChart', selectedRoleMap, 'selectedRoleCount', roleColors);
+      drawChart('selectedSourceChart', selectedSourceMap, 'selectedSourceCount', ['	rgba(241, 244, 58, 0.5)', 'rgba(35, 239, 46, 0.5)', 'rgba(239, 14, 40, 0.5)']);
 
-      Object.keys(counts).forEach(key => {
-        if (counts[key] > 0) {
-          labels.push(key);
-          data.push(counts[key]);
-        }
-      });
-
-      document.getElementById("totalCount").value = `Total: ${data.reduce((a, b) => a + b, 0)}`;
-
-      const legendHtml = [];
-      if (counts.Selected > 0) {
-        legendHtml.push(`<div class="legend-item"><div class="legend-color" style="background-color: #4caf50;"></div>Selected (${counts.Selected})</div>`);
-      }
-      if (counts.Pending > 0) {
-        legendHtml.push(`<div class="legend-item"><div class="legend-color" style="background-color: #ffc107;"></div>Pending (${counts.Pending})</div>`);
-      }
-      if (counts.Rejected > 0) {
-        legendHtml.push(`<div class="legend-item"><div class="legend-color" style="background-color: #f44336;"></div>Rejected (${counts.Rejected})</div>`);
-      }
-
-      document.getElementById("customLegend").innerHTML = legendHtml.join("");
-      drawChart(labels, data);
     }
 
-    let chartInstance = null;
 
-    function drawChart(labels, data) {
-      const ctx = document.getElementById('circularChart').getContext('2d');
 
-      if (chartInstance) {
-        chartInstance.destroy();
+    function generateColors(count) {
+      const colors = [];
+      const hueStep = 360 / count;
+
+      for (let i = 0; i < count; i++) {
+        const hue = i * hueStep;
+        colors.push(`hsla(${hue}, 65%, 60%, 0.5)`); // 0.7 = 70% opacity
       }
 
-      chartInstance = new Chart(ctx, {
-        type: 'doughnut',
+      return colors;
+    }
+    function drawChart(canvasId, dataObj, countId, colors) {
+      const labels = Object.keys(dataObj);
+      const data = Object.values(dataObj);
+      const total = data.reduce((a, b) => a + b, 0);
+      document.getElementById(countId).textContent = total;
+
+      const canvas = document.getElementById(canvasId);
+      if (canvas.chart) canvas.chart.destroy();
+
+      canvas.chart = new Chart(canvas, {
+        type: 'pie',
         data: {
-          labels: labels,
+          labels: labels.map((label, i) => `${label} (${data[i]})`),
           datasets: [{
             data: data,
-            backgroundColor: ['#4caf50', '#ffc107', '#f44336'],
+            backgroundColor: colors.slice(0, labels.length),
             borderWidth: 1
           }]
         },
         options: {
           responsive: true,
           plugins: {
-            legend: { display: false }
+            legend: { position: 'bottom' }
           }
         }
       });
     }
 
+    document.getElementById("startDate").addEventListener("change", updateCharts);
+    document.getElementById("endDate").addEventListener("change", updateCharts);
+    document.getElementById("menu-toggle").addEventListener("click", () => {
+      document.getElementById("nav-links").classList.toggle("active");
+    });
+
     fetchAllLeads();
   </script>
+
 </body>
 
 </html>

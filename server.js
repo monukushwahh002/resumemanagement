@@ -21,7 +21,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 60 * 60 * 1000 // 1 hour in milliseconds
+      maxAge: 60 * 60 * 1000 // 1 hour
     }
   })
 );
@@ -44,6 +44,7 @@ const resumeSchema = new mongoose.Schema({
   source: String,
   submittedDate: String,
   action: { type: String, default: "Pending" },
+  finalstatus: { type: String, default: "Pending" }, // ✅ NEW FIELD ADDED
   file: {
     data: Buffer,
     contentType: String,
@@ -53,7 +54,7 @@ const resumeSchema = new mongoose.Schema({
 
 const Resume = mongoose.model("Resume", resumeSchema);
 
-// Auth middleware (for protected routes)
+// Auth middleware
 function authMiddleware(req, res, next) {
   if (req.session && req.session.authenticated) {
     next();
@@ -62,17 +63,15 @@ function authMiddleware(req, res, next) {
   }
 }
 
-// Public Home Page
+// Routes
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
-// Login Page
 app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "login.html"));
 });
 
-// Handle login
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
   if (username === "admin" && password === "12345") {
@@ -83,35 +82,30 @@ app.post("/login", (req, res) => {
   }
 });
 
-// Logout
 app.get("/logout", (req, res) => {
   req.session.destroy(() => {
     res.redirect("/login");
   });
 });
 
-// Protected Dashboard
 app.get("/dashboard", authMiddleware, (req, res) => {
   res.sendFile(path.join(__dirname, "views", "dashboard.html"));
 });
 
-// Protected Leads
-app.get("/leads", authMiddleware, (req, res) => {
+app.get("/all-leads", authMiddleware, (req, res) => {
   res.sendFile(path.join(__dirname, "views", "leads.html"));
 });
 
 
+app.get("/Selected-leads", authMiddleware, (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "selected.html"));
+});
 
-// app.get("/logout", (req, res) => {
-//   req.session.destroy(() => {
-//     res.redirect("/login");
-//   });
-// });
-// Multer config for file upload
+// Multer config
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// Submit Resume
+// Submit Resume (Create)
 app.post("/api/resumes", upload.single("resume"), async (req, res) => {
   try {
     const { name, email, phone, role, experience, source, submittedDate } = req.body;
@@ -128,6 +122,8 @@ app.post("/api/resumes", upload.single("resume"), async (req, res) => {
       experience,
       source,
       submittedDate,
+      action: "Pending",        // Optional explicit default
+      finalstatus: "Pending",   // ✅ Set default finalstatus
       file: {
         data: req.file.buffer,
         contentType: req.file.mimetype,
@@ -143,17 +139,17 @@ app.post("/api/resumes", upload.single("resume"), async (req, res) => {
   }
 });
 
-// Get all resumes
+// Get All Resumes
 app.get("/api/resumes", async (req, res) => {
   try {
-    const resumes = await Resume.find({}, "name email phone role experience source action submittedDate _id");
+    const resumes = await Resume.find({}, "name email phone role experience source action finalstatus submittedDate _id");
     res.status(200).json(resumes);
   } catch (err) {
     res.status(500).json({ message: "Error fetching resumes" });
   }
 });
 
-// Download resume
+// Download Resume
 app.get("/api/resumes/:id/download", async (req, res) => {
   try {
     const resume = await Resume.findById(req.params.id);
@@ -172,7 +168,7 @@ app.get("/api/resumes/:id/download", async (req, res) => {
   }
 });
 
-// Update action
+// Update Action
 app.put("/api/resumes/:id/action", async (req, res) => {
   const { id } = req.params;
   const { action } = req.body;
@@ -199,7 +195,24 @@ app.put("/api/resumes/:id/action", async (req, res) => {
   }
 });
 
-// Dashboard chart data
+
+
+app.put('/api/resumes/:id/final-status', async (req, res) => {
+  try {
+    const updated = await Resume.findByIdAndUpdate(
+      req.params.id,
+      { finalstatus: req.body.finalstatus },
+      { new: true }
+    );
+    res.json(updated);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to update final status' });
+  }
+});
+
+
+// Chart Data (action wise)
 app.get("/api/chart-data", async (req, res) => {
   try {
     const result = await Resume.aggregate([
@@ -224,7 +237,7 @@ app.get("/api/chart-data", async (req, res) => {
   }
 });
 
-// Start server
+// Start Server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });

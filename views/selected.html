@@ -1,19 +1,20 @@
+<!-- selected-leads.html -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Resume Leads</title>
+  <title>Selected Leads</title>
   <style>
-    /* Reset + Base */
+    /* styles.css */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    
+
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f0f4f8;
@@ -69,11 +70,11 @@
       cursor: pointer;
     }
 
-  
+
     /* Resume Section */
     .container {
-      max-width: 100%;
-      margin: auto;
+      min-width: 90%;
+      margin-top: 20px;
       background: #fff;
       padding: 20px;
       border-radius: 10px;
@@ -282,19 +283,17 @@
       </div>
     </nav>
   </header>
-  <!-- Resume Section -->
+
   <div class="container" id="resumeSection">
-    <h1>All Leads</h1>
+    <h1>Selected Leads</h1>
     <div class="filters">
       <input type="text" id="phoneSearch" placeholder="Search by Contact Number">
       <select id="roleFilter"></select>
-      <select id="experienceFilter"></select>
-      <select id="sourceFilter"></select>
-      <select id="actionFilter">
-        <option value="">All Actions</option>
+      <select id="finalStatusFilter">
+        <option value="">All Final Status</option>
         <option value="Pending">Pending</option>
-        <option value="Selected">Selected</option>
-        <option value="Rejected">Rejected</option>
+        <option value="Joined">Joined</option>
+        <option value="Not Joined">Not Joined</option>
       </select>
       <input type="date" id="fromDate" />
       <input type="date" id="toDate" />
@@ -309,16 +308,14 @@
           <th>Phone</th>
           <th>Role</th>
           <th>Experience</th>
-          <th>Source</th>
-          <th>Download</th>
-          <th>Action</th>
+          <th>Final Status</th>
         </tr>
       </thead>
       <tbody id="resumeTableBody"></tbody>
     </table>
 
     <div class="pagination" id="pagination"></div>
-    <div class="no-data" id="noDataMsg" style="display: none;">No resumes found.</div>
+    <div class="no-data" id="noDataMsg" style="display: none;">No selected resumes found.</div>
   </div>
 
   <script>
@@ -328,9 +325,7 @@
     const pageSize = 10;
 
     const roleFilter = document.getElementById("roleFilter");
-    const experienceFilter = document.getElementById("experienceFilter");
-    const sourceFilter = document.getElementById("sourceFilter");
-    const actionFilter = document.getElementById("actionFilter");
+    const finalStatusFilter = document.getElementById("finalStatusFilter");
     const phoneSearch = document.getElementById("phoneSearch");
     const fromDateInput = document.getElementById("fromDate");
     const toDateInput = document.getElementById("toDate");
@@ -343,9 +338,7 @@
 
     function applyFilters() {
       const role = roleFilter.value;
-      const experience = experienceFilter.value;
-      const source = sourceFilter.value;
-      const action = actionFilter.value;
+      const finalStatus = finalStatusFilter.value;
       const phoneQuery = phoneSearch.value.trim();
       const fromDate = fromDateInput.value ? new Date(fromDateInput.value + "T00:00:00") : null;
       const toDate = toDateInput.value ? new Date(toDateInput.value + "T23:59:59") : null;
@@ -354,9 +347,7 @@
         const resumeDate = new Date(r.submittedDate);
         return (
           (!role || r.role === role) &&
-          (!experience || r.experience === experience) &&
-          (!source || r.source === source) &&
-          (!action || r.action === action) &&
+          (!finalStatus || r.finalstatus === finalStatus) &&
           (!phoneQuery || (r.phone && r.phone.includes(phoneQuery))) &&
           (!fromDate || resumeDate >= fromDate) &&
           (!toDate || resumeDate <= toDate)
@@ -383,25 +374,25 @@
 
       paginated.forEach(r => {
         const dateStr = r.submittedDate ? new Date(r.submittedDate).toLocaleDateString("en-GB") : "N/A";
+        const finalDisabled = r.finalstatus === "Joined" || r.finalstatus === "Not Joined";
+
         const row = `
-          <tr>
-            <td data-label="Date">${dateStr}</td>
-            <td data-label="Name">${r.name}</td>
-            <td data-label="Email">${r.email}</td>
-            <td data-label="Phone">${r.phone}</td>
-            <td data-label="Role">${r.role}</td>
-            <td data-label="Experience">${r.experience}</td>
-            <td data-label="Source">${r.source || "N/A"}</td>
-            <td data-label="Download"><button onclick="downloadResume('${r._id}')">Download</button></td>
-            <td data-label="Action">
-              <select onchange="handleActionChange(this, '${r._id}')" ${r.action === "Selected" ? "disabled" : ""}>
-              <option value="Pending" ${r.action === "Pending" ? "selected" : ""}>Pending</option>
-              <option value="Selected" ${r.action === "Selected" ? "selected" : ""}>Selected</option>
-              <option value="Rejected" ${r.action === "Rejected" ? "selected" : ""}>Rejected</option>
-              </select>
-            </td>
-          </tr>
-        `;
+  <tr>
+    <td data-label="Date">${dateStr}</td>
+    <td data-label="Name">${r.name}</td>
+    <td data-label="Email">${r.email}</td>
+    <td data-label="Phone">${r.phone}</td>
+    <td data-label="Role">${r.role}</td>
+    <td data-label="Experience">${r.experience}</td>
+    <td data-label="Final Status">
+      <select onchange="handleFinalStatusChange(this, '${r._id}')">
+        <option value="Pending" ${r.finalstatus === "Pending" ? "selected" : ""} ${r.finalstatus !== "Pending" ? "disabled" : ""}>Pending</option>
+        <option value="Joined" ${r.finalstatus === "Joined" ? "selected" : ""}>Joined</option>
+        <option value="Not Joined" ${r.finalstatus === "Not Joined" ? "selected" : ""}>Not Joined</option>
+      </select>
+    </td>
+  </tr>
+`;
         tbody.insertAdjacentHTML("beforeend", row);
       });
 
@@ -423,48 +414,41 @@
       renderTable();
     }
 
-    function downloadResume(id) {
-      window.location.href = `/api/resumes/${id}/download`;
-    }
+    function handleFinalStatusChange(selectEl, resumeId) {
+      const finalstatus = selectEl.value;
 
-    function handleActionChange(selectEl, resumeId) {
-      const selected = selectEl.value;
-
-      fetch(`/api/resumes/${resumeId}/action`, {
+      fetch(`/api/resumes/${resumeId}/final-status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ action: selected })
+        body: JSON.stringify({ finalstatus })
       })
         .then(res => {
-          if (!res.ok) throw new Error("Failed to update action");
+          if (!res.ok) throw new Error("Failed to update final status");
           return res.json();
         })
         .then(data => {
-          console.log("✅ Action updated:", data);
+          console.log("✅ Final status updated:", data);
+          selectEl.disabled = true;
         })
         .catch(err => {
-          console.error("❌ Error updating action:", err);
-          alert("Failed to update action");
+          console.error("❌ Error updating final status:", err);
+          alert("Failed to update final status");
         });
     }
 
     fetch("/api/resumes")
       .then(res => res.json())
       .then(data => {
-        resumes = data.sort((a, b) => new Date(b.submittedDate) - new Date(a.submittedDate));
+        resumes = data.filter(r => r.action === "Selected");
         filtered = [...resumes];
         createOptions(roleFilter, "role");
-        createOptions(experienceFilter, "experience");
-        createOptions(sourceFilter, "source");
         renderTable();
       });
 
     roleFilter.addEventListener("change", applyFilters);
-    experienceFilter.addEventListener("change", applyFilters);
-    sourceFilter.addEventListener("change", applyFilters);
-    actionFilter.addEventListener("change", applyFilters);
+    finalStatusFilter.addEventListener("change", applyFilters);
     phoneSearch.addEventListener("input", applyFilters);
     fromDateInput.addEventListener("change", applyFilters);
     toDateInput.addEventListener("change", applyFilters);
